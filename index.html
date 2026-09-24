@@ -1,461 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alignment Detective | MACC Digital Design</title>
-<style>
-*{box-sizing:border-box}
-:root{--ink:#202124;--muted:#687078;--paper:#eeeae3;--panel:#fff;--line:#d8d4cc;--accent:#222;--good:#236b3b;--bad:#a73535}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-button{font:inherit}
-.app{max-width:1180px;margin:auto;padding:20px}
-.hero{background:#202124;color:white;border-radius:18px;padding:28px 24px;text-align:center;margin-bottom:16px}
-.hero h1{font-family:Georgia,serif;font-size:clamp(34px,6vw,62px);margin:0 0 7px;letter-spacing:.5px}
-.hero p{margin:0;color:#d8d8d8}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 3px 16px rgba(0,0,0,.05)}
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mode-btn{padding:16px;border:2px solid var(--line);border-radius:12px;background:white;cursor:pointer;text-align:left}
-.mode-btn.active{background:#202124;color:white;border-color:#202124}
-.mode-btn strong{display:block;font-size:18px;margin-bottom:4px}
-.mode-btn span{font-size:13px;opacity:.78}
-.length-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.length-grid button,.action{padding:13px;border:2px solid var(--line);border-radius:10px;background:white;font-weight:700;cursor:pointer}
-.action.primary{background:#202124;color:white;border-color:#202124}
-.hidden{display:none!important}
-.stats{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-weight:700;margin-bottom:12px}
-.stage{background:#e7e2d9;padding:18px;border-radius:12px}
-.artboard{position:relative;background:#fff;border:1px solid #d3d0ca;border-radius:5px;max-width:940px;height:560px;margin:auto;overflow:hidden}
-.artboard:after{content:"";position:absolute;inset:28px;border:1px dashed rgba(0,0,0,.08);pointer-events:none}
-.kicker{position:absolute;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8a8a8a}
-.head{position:absolute;font-family:Georgia,serif;font-weight:700;font-size:clamp(31px,4.5vw,58px);line-height:.95}
-.copy{position:absolute;width:260px;font-size:14px;line-height:1.55;color:#4c5054}
-.rule{position:absolute;height:3px;background:#202124}
-.g{position:absolute;background:#222}
-.g.circle{border-radius:50%}.g.round{border-radius:18px}.g.soft{border-radius:50% 18px 50% 18px}
-.g.light{background:#8a8d90}.g.mid{background:#555a5e}.g.dark{background:#202124}
-.caption{max-width:940px;margin:8px auto 0;color:#777;text-align:center;font-size:12px}
-.choices{display:grid;gap:10px;margin-top:15px}
-.choice{padding:14px;text-align:left;border:2px solid var(--line);border-radius:11px;background:white;cursor:pointer;line-height:1.35}
-.choice.selected{border-color:#202124;box-shadow:0 0 0 2px #202124 inset}
-.choice.correct{background:#e9f5ed;border-color:var(--good)}
-.choice.wrong{background:#f9e9e9;border-color:var(--bad)}
-.feedback{text-align:center;font-size:18px;font-weight:700;min-height:28px;margin:12px 0}
-.good{color:var(--good)}.bad{color:var(--bad)}
-.explain{background:#f4f1eb;border-radius:10px;padding:14px;line-height:1.5}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
-.result{text-align:center}.score-big{font-size:52px;font-weight:800}
-.mini{font-size:13px;color:var(--muted);line-height:1.5}
-@media(max-width:700px){.mode-grid{grid-template-columns:1fr}.length-grid{grid-template-columns:repeat(3,1fr)}.artboard{height:500px}.copy{width:220px}}
-@media(max-width:460px){.length-grid{grid-template-columns:1fr 1fr}.artboard{height:450px}.copy{width:185px;font-size:12px}}
-</style>
-</head>
-<body>
-<div class="app">
-<header class="hero">
-<h1>ALIGNMENT DETECTIVE</h1>
-<p>Find the visual problem. Explain the fix. Think like a designer.</p>
-</header>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alignment & Spacing Detective</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eeeae3;color:#202124;font-family:Arial,sans-serif}.app{max-width:1200px;margin:auto;padding:18px}.hero{background:#202124;color:#fff;border-radius:18px;padding:28px;text-align:center}.hero h1{font:700 clamp(34px,6vw,62px)/.95 Georgia,serif;margin:0 0 8px}.hero p{margin:0;color:#ddd}.panel{background:#fff;border:1px solid #d7d3cb;border-radius:16px;padding:18px;margin:16px 0;box-shadow:0 3px 14px #0001}.modes,.lengths{display:grid;gap:10px}.modes{grid-template-columns:1fr 1fr}.mode,.btn,.choice{border:2px solid #d7d3cb;background:#fff;border-radius:11px;padding:13px;cursor:pointer}.mode{text-align:left}.mode.active,.primary{background:#202124;color:#fff;border-color:#202124}.mode strong{display:block;font-size:18px}.mode small{opacity:.75}.lengths{grid-template-columns:repeat(5,1fr)}.hidden{display:none!important}.stats{display:flex;justify-content:space-between;flex-wrap:wrap;font-weight:bold;margin-bottom:12px}.instructions{background:#f5f2ec;padding:12px;border-radius:10px;line-height:1.5}.stage{background:#e5e0d7;padding:18px;border-radius:12px}.canvas{position:relative;max-width:1000px;height:570px;margin:auto;background:#fff;border:1px solid #ccc;border-radius:5px;overflow:hidden}.canvas:after{content:"";position:absolute;inset:28px;border:1px dashed #0001;pointer-events:none}.k{position:absolute;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#888}.head{position:absolute;font:700 52px/.92 Georgia,serif}.copy{position:absolute;font:15px/1.55 Arial;color:#444}.sub{position:absolute;font:bold 20px/1.15 Arial}.shape{position:absolute;background:#222}.light{background:#9b9fa2}.mid{background:#5d6266}.circle{border-radius:50%}.round{border-radius:16px}.image{position:absolute;background:#c4c6c7;overflow:hidden}.image:before{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:#fff8;left:20%;top:18%}.image:after{content:"";position:absolute;width:180px;height:80px;background:#7778;transform:rotate(-18deg);left:28%;bottom:4%}.tight{letter-spacing:-3px}.loose{letter-spacing:8px}.tightlead{line-height:1.02}.looselead{line-height:2.1}.choices{display:grid;gap:10px;margin-top:15px}.choice{text-align:left;line-height:1.4}.choice.selected{border-color:#202124;box-shadow:0 0 0 2px #202124 inset}.correct{background:#eaf5ed;border-color:#246b3b!important}.wrong{background:#fae9e9;border-color:#a52f2f!important}.feedback{text-align:center;min-height:28px;font-size:18px;font-weight:bold;margin:12px 0}.good{color:#246b3b}.bad{color:#a52f2f}.explain{background:#f5f2ec;padding:14px;border-radius:10px;line-height:1.55}.result{text-align:center}.score{font-size:54px;font-weight:800}.note{font-size:13px;color:#687078;line-height:1.5}@media(max-width:700px){.modes{grid-template-columns:1fr}.lengths{grid-template-columns:repeat(3,1fr)}.canvas{height:500px}.head{font-size:40px}}@media(max-width:450px){.lengths{grid-template-columns:1fr 1fr}.canvas{height:430px}}
 
-<section class="panel">
-<h2>Choose Your Mode</h2>
-<div class="mode-grid">
-<button id="learnMode" class="mode-btn active" type="button">
-<strong>🟢 Learn Mode</strong><span>Practice one layout at a time. Get an explanation and see the corrected version.</span>
-</button>
-<button id="testMode" class="mode-btn" type="button">
-<strong>🔵 Test Mode</strong><span>Choose a test length and work through the layouts without stopping.</span>
-</button>
-</div>
-<p class="mini">Look for shared edges, common center lines, equal spacing, baselines, margins, columns, proximity, and grouping.</p>
-</section>
-
-<section id="testSetup" class="panel hidden">
-<h2>Choose Test Length</h2>
-<div class="length-grid">
-<button type="button" data-length="10">10</button>
-<button type="button" data-length="20">20</button>
-<button type="button" data-length="30">30</button>
-<button type="button" data-length="40">40</button>
-<button type="button" data-length="50">50</button>
-</div>
-<p class="mini">The layouts are selected from a larger pool and may repeat during longer tests. The next question advances automatically.</p>
-</section>
-
-<section id="learnPanel" class="panel hidden">
-<div class="stats"><span>Round: <b id="learnRound">1</b></span><span>Score: <b id="learnScore">0</b></span><span>Streak: <b id="learnStreak">0</b></span></div>
-<div class="stage"><div id="learnArt" class="artboard"></div><div class="caption">Study the layout before choosing an answer.</div></div>
-<div id="learnChoices" class="choices"></div>
-<div id="learnFeedback" class="feedback"></div>
-<div id="learnExplain" class="explain hidden"></div>
-<div class="actions">
-<button id="learnCheck" class="action primary" type="button">Check Answer</button>
-<button id="learnNext" class="action hidden" type="button">Next Layout</button>
-</div>
-</section>
-
-<section id="testPanel" class="panel hidden">
-<div class="stats"><span>Question: <b id="testNumber">1</b> / <b id="testTotal">10</b></span><span>Score: <b id="testScore">0</b></span></div>
-<div class="stage"><div id="testArt" class="artboard"></div><div class="caption">Choose the best design correction.</div></div>
-<div id="testChoices" class="choices"></div>
-<div id="testFeedback" class="feedback"></div>
-</section>
-
-<section id="results" class="panel result hidden"></section>
-
-<section class="panel mini">
-<strong>Designer reminder:</strong> Alignment is not just about making things straight. It creates relationships between elements, establishes hierarchy, and helps the viewer understand how a composition is organized.
-</section>
-</div>
-
+/* Guidance slideout */
+.guide-tab{position:fixed;right:0;top:42%;z-index:50;border:0;background:#202124;color:#fff;padding:13px 10px;border-radius:12px 0 0 12px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px #0003}
+.guide-panel{position:fixed;top:0;right:0;width:min(390px,92vw);height:100vh;background:#fff;z-index:60;transform:translateX(105%);transition:transform .28s ease;box-shadow:-8px 0 28px #0003;overflow:auto;padding:22px}
+.guide-panel.open{transform:translateX(0)}
+.guide-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding-bottom:12px;margin-bottom:16px}
+.guide-head h2{margin:0}.guide-close{border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:20px}
+.guide-card{background:#f5f2ec;border-radius:12px;padding:14px;margin:12px 0;line-height:1.55}
+.guide-card.celebrate{background:#eaf5ed;border-left:5px solid #246b3b}
+.guide-card.partial{background:#fff7e6;border-left:5px solid #a86b00}
+.guide-card.reteach{background:#f1f3f4;border-left:5px solid #5f6368}
+.guide-card h3{margin:0 0 7px}
+.guide-card ul{margin:8px 0 0 20px;padding:0}.guide-tip{font-size:13px;color:#5f6368}
+</style></head><body>
+<button id="guideTab" class="guide-tab" type="button">💡 Design Guide</button>
+<aside id="guidePanel" class="guide-panel" aria-hidden="true">
+  <div class="guide-head"><h2>Design Guide</h2><button id="guideClose" class="guide-close" type="button" aria-label="Close">×</button></div>
+  <div id="guideContent">
+    <div class="guide-card">
+      <h3>How to use this guide</h3>
+      <p>Look for relationships, not isolated objects. Ask yourself: What belongs together? What should share an edge? Where should the eye pause? Which spaces should be smaller or larger?</p>
+    </div>
+  </div>
+</aside>
+<div class="app"><header class="hero"><h1>ALIGNMENT & SPACING DETECTIVE</h1><p>Find the relationships that are making the layout feel wrong.</p></header><section class="panel"><h2>Choose Your Mode</h2><div class="modes"><button id="learnMode" class="mode active"><strong>🟢 Learn Mode</strong><small>Diagnose a layout, choose several improvements, and see the corrected composition.</small></button><button id="testMode" class="mode"><strong>🔵 Test Mode</strong><small>Choose a length and identify the best overall solution.</small></button></div></section><section id="setup" class="panel hidden"><h2>Choose Test Length</h2><div class="lengths"><button class="btn" data-n="10">10</button><button class="btn" data-n="20">20</button><button class="btn" data-n="30">30</button><button class="btn" data-n="40">40</button><button class="btn" data-n="50">50</button></div></section><section id="learn" class="panel"><div class="stats"><span>Challenge: <b id="round">1</b></span><span>Score: <b id="score">0</b></span><span>Streak: <b id="streak">0</b></span></div><div id="brief" class="instructions"></div><div class="stage"><div id="canvas" class="canvas"></div></div><div id="choices" class="choices"></div><div id="feedback" class="feedback"></div><div id="explain" class="explain hidden"></div><p><button id="check" class="btn primary">Check My Solutions</button> <button id="next" class="btn hidden">Next Challenge</button></p></section><section id="test" class="panel hidden"><div class="stats"><span>Question: <b id="q">1</b> / <b id="total">10</b></span><span>Score: <b id="tscore">0</b></span></div><div id="tbrief" class="instructions"></div><div class="stage"><div id="tcanvas" class="canvas"></div></div><div id="tchoices" class="choices"></div><div id="tfeedback" class="feedback"></div></section><section id="results" class="panel result hidden"></section><section class="panel note"><b>Designer reminder:</b> Strong layouts often require several small changes working together. Watch alignment, margins, grouping, proximity, spacing, leading, kerning/tracking, and separate text-box alignment.</section></div>
 <script>
-"use strict";
-
-const SCENARIOS = [{"id":"left-edge","title":"Shared Left Edge","principle":"Related elements should share a clear vertical edge.","fix":"Align the headline, paragraph, and image block to the same left edge.","wrong":["Center the paragraph under the headline and leave the image where it is.","Move each element to a different margin to create more visual variety."],"type":"left"},{"id":"headline-copy","title":"Headline + Copy","principle":"The body copy should reinforce the alignment established by the headline.","fix":"Move the paragraph so its left edge lines up with the headline.","wrong":["Center the paragraph because body copy should always be centered.","Make the paragraph wider until it touches both page margins."],"type":"copy"},{"id":"center-axis","title":"Common Center Axis","principle":"Centered elements should share the same invisible vertical axis.","fix":"Center the headline, paragraph, and graphic group on the same vertical axis.","wrong":["Move only the headline until it is centered over the paragraph.","Make the graphic group wider so the different centers are less noticeable."],"type":"center"},{"id":"equal-spacing","title":"Equal Spacing","principle":"Repeated objects feel more organized when the spaces between them are consistent.","fix":"Use equal horizontal spacing between the graphic elements.","wrong":["Make every gap different so the arrangement feels more spontaneous.","Move the middle object closer to the largest object."],"type":"spacing"},{"id":"baseline","title":"Common Baseline","principle":"Objects in a row can feel connected when their bottoms share a common line.","fix":"Align the bottoms of the graphic elements to a common baseline.","wrong":["Align only the tops and ignore the bottoms.","Rotate the smallest object to distract from the uneven baseline."],"type":"baseline"},{"id":"margin","title":"Balanced Margins","principle":"A composition should have intentional margins around its content.","fix":"Move the content inward so the left and right margins feel balanced.","wrong":["Push everything closer to the right edge.","Make the headline larger to hide the uneven margin."],"type":"margin"},{"id":"group","title":"Group Alignment","principle":"Elements that form a group should visually belong to the same structure.","fix":"Bring the stray graphic back into alignment with the graphic group.","wrong":["Make the stray graphic much larger so it becomes a new focal point.","Move the entire graphic group away from the stray object."],"type":"group"},{"id":"vertical-rhythm","title":"Vertical Rhythm","principle":"Consistent vertical spacing helps viewers understand hierarchy and relationships.","fix":"Create a deliberate, consistent rhythm between the headline, paragraph, and graphics.","wrong":["Use a different gap between every element.","Put the paragraph extremely close to the headline but leave the other gaps unchanged."],"type":"rhythm"},{"id":"container","title":"Column Alignment","principle":"A shared invisible column can connect text and graphic elements.","fix":"Align the graphic block with the same column edge as the text.","wrong":["Move the text all the way to the page edge.","Offset every graphic differently so there is no visible grid."],"type":"container"},{"id":"edge","title":"Common Edge","principle":"A shared edge creates a strong visual relationship.","fix":"Move the oversized graphic back to the common edge of the group.","wrong":["Leave it outside the edge because asymmetry is always better.","Shrink every other object until the difference disappears."],"type":"edge"},{"id":"proximity","title":"Proximity","principle":"Spacing communicates which elements belong together.","fix":"Increase the gap between the headline and graphic so the graphic reads as part of its own group.","wrong":["Move the graphic even closer to the headline.","Spread every element equally far apart."],"type":"proximity"},{"id":"asymmetric-balance","title":"Intentional Alignment","principle":"Asymmetry can be intentional, but it should still have an underlying alignment structure.","fix":"Keep the asymmetrical composition while aligning the key edges that organize the page.","wrong":["Make every object perfectly centered.","Move everything randomly until the composition looks less structured."],"type":"asym"}];
-const WORDS = ["DESIGN","ALIGN","CREATE","VISUAL","SPACE","FORM","TYPE","ORDER"];
-
-const state = {
-  mode: "learn",
-  current: null,
-  selectedIndex: -1,
-  learnLocked: false,
-  learnRound: 0,
-  learnScore: 0,
-  learnStreak: 0,
-  testTotal: 0,
-  testNumber: 0,
-  testScore: 0,
-  testLocked: false
-};
-
-function $(id){ return document.getElementById(id); }
-
-function randomItem(list){
-  return list[Math.floor(Math.random() * list.length)];
-}
-
-function shuffled(list){
-  return list.slice().sort(function(){ return Math.random() - 0.5; });
-}
-
-function setMode(mode){
-  state.mode = mode;
-  $("learnMode").classList.toggle("active", mode === "learn");
-  $("testMode").classList.toggle("active", mode === "test");
-  $("testSetup").classList.toggle("hidden", mode !== "test");
-  $("learnPanel").classList.toggle("hidden", mode !== "learn");
-  $("testPanel").classList.add("hidden");
-  $("results").classList.add("hidden");
-
-  if(mode === "learn"){
-    state.learnRound = 0;
-    state.learnScore = 0;
-    state.learnStreak = 0;
-    startLearnRound();
-  }
-}
-
-function makeAnswerOptions(scenario){
-  return shuffled([scenario.fix].concat(scenario.wrong));
-}
-
-function startLearnRound(){
-  state.learnRound += 1;
-  state.current = randomItem(SCENARIOS);
-  state.selectedIndex = -1;
-  state.learnLocked = false;
-
-  $("learnRound").textContent = state.learnRound;
-  $("learnScore").textContent = state.learnScore;
-  $("learnStreak").textContent = state.learnStreak;
-  $("learnFeedback").textContent = "";
-  $("learnFeedback").className = "feedback";
-  $("learnExplain").classList.add("hidden");
-  $("learnNext").classList.add("hidden");
-  $("learnCheck").classList.remove("hidden");
-
-  renderLayout($("learnArt"), state.current, false);
-  renderChoices($("learnChoices"), makeAnswerOptions(state.current), false);
-}
-
-function renderChoices(container, options, testMode){
-  container.innerHTML = "";
-  options.forEach(function(option, index){
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "choice";
-    button.textContent = option;
-    button.dataset.answer = option === state.current.fix ? "correct" : "wrong";
-    button.addEventListener("click", function(){
-      if(testMode){
-        answerTest(option, button);
-        return;
-      }
-      if(state.learnLocked) return;
-      state.selectedIndex = index;
-      Array.from(container.querySelectorAll(".choice")).forEach(function(item){
-        item.classList.remove("selected");
-      });
-      button.classList.add("selected");
-    });
-    container.appendChild(button);
-  });
-}
-
-function checkLearn(){
-  if(state.learnLocked) return;
-  if(state.selectedIndex < 0){
-    $("learnFeedback").textContent = "Choose the best fix first.";
-    $("learnFeedback").className = "feedback bad";
-    return;
-  }
-
-  state.learnLocked = true;
-  const buttons = Array.from($("learnChoices").querySelectorAll(".choice"));
-  const chosen = buttons[state.selectedIndex];
-  const correct = chosen.dataset.answer === "correct";
-
-  buttons.forEach(function(button){
-    button.disabled = true;
-    if(button.dataset.answer === "correct") button.classList.add("correct");
-  });
-
-  if(correct){
-    state.learnScore += 1;
-    state.learnStreak += 1;
-    $("learnFeedback").textContent = "✓ Correct!";
-    $("learnFeedback").className = "feedback good";
+"use strict";const DATA=[
+{t:"Poster Grid",c:"Alignment + Margins + Grouping",f:["Align the headline, paragraph, and image block to one shared left edge.","Increase the outer margins so the composition has a comfortable frame.","Tighten spacing within the graphic group while keeping a larger gap before the text."],v:0},
+{t:"Editorial Text Boxes",c:"Text Alignment + Proximity",f:["Set the headline, subheading, and paragraph to the same left alignment.","Align the separate text boxes to the same text column.","Reduce the gap between headline and subheading while keeping more space before the next section."],v:1},
+{t:"Gallery Spacing",c:"Spacing + Grouping",f:["Use consistent gaps between all thumbnails.","Make the gallery's internal gaps smaller than the gap separating it from the caption.","Keep the gallery inside a consistent page margin."],v:2},
+{t:"Typography Trouble",c:"Leading + Kerning + Alignment",f:["Increase leading in the body paragraph.","Reduce excessive letter spacing in the headline.","Align the paragraph and caption to the same text edge."],v:3},
+{t:"Event Card",c:"Proximity + Vertical Spacing",f:["Bring date, time, and location closer together as one information group.","Increase the gap between event information and the decorative graphic.","Use a consistent vertical rhythm between headline and supporting information."],v:4},
+{t:"Product Feature",c:"Alignment + Margin + Grouping",f:["Align the product description and feature list to one text column.","Balance the outer margins around the product image and text.","Use consistent vertical spacing between feature-list items."],v:5},
+{t:"Social Graphic",c:"Alignment + Text Spacing",f:["Use one dominant alignment axis for the text boxes.","Increase the space between headline and paragraph.","Move decorative shapes away from the text so they support rather than crowd it."],v:6},
+{t:"Magazine Spread",c:"Columns + Leading + Margins",f:["Align text blocks to the same column grid.","Increase paragraph leading for easier reading.","Restore consistent outer margins around the spread."],v:7},
+{t:"Information Graphic",c:"Alignment + Proximity + Spacing",f:["Align each label/value pair to the same text edge.","Keep each icon close to the information it describes.","Use equal spacing between repeated information groups."],v:8},
+{t:"Three Columns",c:"Grid + Margins + Paragraph Spacing",f:["Align all three columns to common top and bottom guides.","Keep outer margins larger than the gutters between columns.","Use consistent paragraph spacing within each column."],v:9},
+{t:"Portfolio Card",c:"Proximity + Alignment + Padding",f:["Align title and description with the image/card content edge.","Bring project metadata closer to the title it belongs to.","Use consistent internal padding around the card."],v:10},
+{t:"Type Specimen",c:"Kerning + Leading + Alignment",f:["Reduce exaggerated letter spacing in the display word.","Increase leading between lines of supporting text.","Align supporting text to the same edge as the specimen heading."],v:11}];
+const S={cur:null,sel:new Set(),lock:false,round:0,score:0,streak:0,total:0,q:0,tscore:0,tlock:false};const $=id=>document.getElementById(id),pick=a=>a[Math.floor(Math.random()*a.length)],shuffle=a=>a.slice().sort(()=>Math.random()-.5);function mode(m){$("learnMode").classList.toggle("active",m==="learn");$("testMode").classList.toggle("active",m==="test");$("setup").classList.toggle("hidden",m!=="test");$("learn").classList.toggle("hidden",m!=="learn");$("test").classList.add("hidden");$("results").classList.add("hidden");if(m==="learn"){S.round=S.score=S.streak=0;learn()}}function add(t,c,x){let d=document.createElement("div");d.className=c;d.innerHTML=x||"";t.appendChild(d);return d}
+function visual(t,s,c){t.innerHTML="";let k=add(t,"k","Digital Design");k.style.left=c?"72px":"42px";k.style.top="32px";let h,cp,im;switch(s.v){case 0:h=add(t,"head","MAKE<br>IT CLEAR");h.style.left=c?"72px":"42px";h.style.top="68px";cp=add(t,"copy","A strong composition gives every element a reason to be where it is. Alignment and spacing help the viewer understand the message.");cp.style.left=c?"72px":"120px";cp.style.top="225px";cp.style.width="270px";im=add(t,"image");im.style.left=c?"520px":"575px";im.style.top="70px";im.style.width="340px";im.style.height="250px";break;case 1:h=add(t,"head","READ<br>THE<br>GRID");h.style.left=c?"80px":"95px";h.style.top="62px";let su=add(t,"sub","Structure makes ideas easier to follow.");su.style.left=c?"80px":"180px";su.style.top="245px";cp=add(t,"copy","This paragraph should belong to the same visual column as the headline and supporting information.");cp.style.left=c?"80px":"180px";cp.style.top="290px";cp.style.width="290px";im=add(t,"image");im.style.left="565px";im.style.top="62px";im.style.width="320px";im.style.height="355px";break;case 2:h=add(t,"head","FORM /<br>SPACE");h.style.left="70px";h.style.top="55px";let xs=c?[70,205,340,475]:[55,230,315,510],ys=c?[210,210,210,210]:[215,205,250,195];for(let i=0;i<4;i++){im=add(t,"image");im.style.left=xs[i]+"px";im.style.top=ys[i]+"px";im.style.width="115px";im.style.height="125px"}break;case 3:h=add(t,"head "+(c?"":"loose"),"SPACING");h.style.left="70px";h.style.top="65px";cp=add(t,"copy "+(c?"":"tightlead"),"Typography is visual voice. Line spacing, letter spacing, and alignment change how quickly a reader understands the message.");cp.style.left="70px";cp.style.top="190px";cp.style.width="390px";break;case 4:h=add(t,"head","DESIGN<br>NIGHT");h.style.left="70px";h.style.top="60px";["OCT 24","6:00 PM","MACC AUDITORIUM"].forEach((x,i)=>{let d=add(t,i<2?"sub":"copy",x);d.style.left="70px";d.style.top=(c?220+i*42:300+i*55)+"px"});im=add(t,"image");im.style.left="500px";im.style.top="70px";im.style.width="350px";im.style.height="300px";break;case 5:im=add(t,"image");im.style.left=c?"70px":"45px";im.style.top="65px";im.style.width="360px";im.style.height="380px";h=add(t,"head","DESIGN<br>TOOLKIT");h.style.left="500px";h.style.top="75px";cp=add(t,"copy","Everything you need to build stronger visual compositions.");cp.style.left=c?"500px":"550px";cp.style.top="220px";cp.style.width="300px";break;default:h=add(t,"head","CREATE<br>BETTER");h.style.left=c?"75px":"120px";h.style.top="70px";cp=add(t,"copy","Small decisions create big differences.");cp.style.left=c?"75px":"165px";cp.style.top="230px";cp.style.width="270px";for(let i=0;i<4;i++){let d=add(t,i%2?"shape circle mid":"shape circle light");d.style.left=(c?560:500)+i*75+"px";d.style.top=(c?90:180)+i*80+"px";d.style.width="60px";d.style.height="60px"}}}
+function opts(f){return shuffle(f.concat(["Center every element and make every gap identical.","Only change the headline size and ignore the spacing structure.","Move decorative elements closer to text so the page feels fuller."])).slice(0,5)}function learn(){S.round++;S.cur=pick(DATA);S.sel=new Set();S.lock=false;$("round").textContent=S.round;$("score").textContent=S.score;$("streak").textContent=S.streak;$("brief").innerHTML="<b>"+S.cur.t+"</b><br>"+S.cur.c+"<br><br>Choose all solutions that should work together to dramatically improve the layout.";visual($("canvas"),S.cur,false);$("feedback").textContent="";$("feedback").className="feedback";$("explain").classList.add("hidden");$("check").classList.remove("hidden");$("next").classList.add("hidden");$("choices").innerHTML="";opts(S.cur.f).forEach(x=>{let b=add($("choices"),"choice",x);b.dataset.correct=S.cur.f.includes(x);b.onclick=()=>{if(S.lock)return;b.classList.toggle("selected");S.sel.has(b)?S.sel.delete(b):S.sel.add(b)}})}function guideResult(good, missed, wrong){
+  let title, cls, intro;
+  if(good===S.cur.f.length && wrong===0){
+    title="Excellent design diagnosis! 🎉"; cls="celebrate";
+    intro="You identified every change needed and avoided the tempting fixes that would not solve the underlying problems.";
+  }else if(good>0){
+    title="Good thinking — you found part of the solution."; cls="partial";
+    intro="You correctly recognized some important relationships. Now use the missed items to complete the layout.";
   }else{
-    state.learnStreak = 0;
-    chosen.classList.add("wrong");
-    $("learnFeedback").textContent = "Not quite. Study the relationships between the elements.";
-    $("learnFeedback").className = "feedback bad";
+    title="Let's slow down and rebuild the fundamentals."; cls="reteach";
+    intro="You made an attempt, and this is a good opportunity to look at the layout differently. Start by comparing edges, groups, and the amount of space between related elements.";
   }
-
-  $("learnScore").textContent = state.learnScore;
-  $("learnStreak").textContent = state.learnStreak;
-
-  $("learnExplain").innerHTML =
-    "<strong>Principle:</strong> " + state.current.principle +
-    "<br><br><strong>Best fix:</strong> " + state.current.fix;
-  $("learnExplain").classList.remove("hidden");
-
-  showCorrectedLayout($("learnArt"), state.current);
-  $("learnCheck").classList.add("hidden");
-  $("learnNext").classList.remove("hidden");
+  let right=good?`<ul>${S.cur.f.filter((x,i)=>i<good).map(x=>"<li>"+x+"</li>").join("")}</ul>`:"<p>There are no fully identified solutions yet — that's okay. Start with the basic questions below.</p>";
+  let missedBlock=missed.length?`<h3>What to revisit</h3><ul>${missed.map(x=>"<li>"+x+"</li>").join("")}</ul>`:"";
+  let fundamentals=good===0?`<h3>Fundamentals to remember</h3>
+  <ul>
+    <li><b>Alignment:</b> related elements often feel stronger when they share an edge, center line, or grid.</li>
+    <li><b>Proximity:</b> related items should usually be closer together than unrelated items.</li>
+    <li><b>Margins:</b> the outer edge of a composition needs breathing room and should feel intentional.</li>
+    <li><b>Spacing:</b> repeated relationships should use consistent gaps unless a larger gap is intentionally separating groups.</li>
+    <li><b>Typography:</b> leading controls vertical space between lines; kerning/tracking controls horizontal space between letters.</li>
+  </ul>`:"";
+  $("guideContent").innerHTML=`<div class="guide-card ${cls}"><h3>${title}</h3><p>${intro}</p></div>
+  <div class="guide-card"><h3>What you got right</h3>${right}</div>
+  ${missedBlock?`<div class="guide-card">${missedBlock}</div>`:""}
+  <div class="guide-card">${fundamentals||"<h3>Why the missed changes matter</h3><p>Each remaining change affects how viewers group information, follow the reading path, and perceive balance. Good design usually comes from several small relationships working together.</p>"}</div>
+  <p class="guide-tip">Remember: the goal is not to make everything identical. The goal is to make the relationships intentional.</p>`;
+  openGuide();
 }
-
-function startTest(total){
-  state.mode = "test";
-  state.testTotal = total;
-  state.testNumber = 0;
-  state.testScore = 0;
-  state.testLocked = false;
-
-  $("testSetup").classList.add("hidden");
-  $("learnPanel").classList.add("hidden");
-  $("results").classList.add("hidden");
-  $("testPanel").classList.remove("hidden");
-  nextTestQuestion();
+function openGuide(){$("guidePanel").classList.add("open");$("guidePanel").setAttribute("aria-hidden","false")}
+function closeGuide(){$("guidePanel").classList.remove("open");$("guidePanel").setAttribute("aria-hidden","true")}
+function check(){
+if(S.locked)return;
+if(!S.sel.size){$("feedback").textContent="Select the solutions you think belong together.";return}
+S.locked=true;
+let bs=[...$("choices").children],
+good=bs.filter(b=>b.classList.contains("selected")&&b.dataset.correct==="true").length,
+wrong=bs.filter(b=>b.classList.contains("selected")&&b.dataset.correct==="false").length,
+missed=S.cur.f.filter(x=>!bs.some(b=>b.classList.contains("selected")&&b.dataset.correct==="true"&&b.textContent===x));
+let ok=good===S.cur.f.length&&!wrong;
+bs.forEach(b=>{b.disabled=true;if(b.dataset.correct==="true")b.classList.add("correct");if(b.classList.contains("selected")&&b.dataset.correct==="false")b.classList.add("wrong")});
+if(ok){S.score++;S.streak++;$("feedback").textContent="✓ Strong design diagnosis!";$("feedback").className="feedback good"}
+else{S.streak=0;$("feedback").textContent=good?"Good start — now study what was missed.":"Let's study the fundamentals and try again.";$("feedback").className="feedback bad"}
+$("score").textContent=S.score;$("streak").textContent=S.streak;
+$("explain").innerHTML="<b>Why these work together:</b><br>• "+S.cur.f.join("<br>• ")+"<br><br><b>Concept:</b> "+S.cur.c;
+$("explain").classList.remove("hidden");visual($("canvas"),S.cur,true);$("check").classList.add("hidden");$("next").classList.remove("hidden");
+guideResult(good,missed,wrong);
 }
-
-function nextTestQuestion(){
-  if(state.testNumber >= state.testTotal){
-    finishTest();
-    return;
-  }
-
-  state.testNumber += 1;
-  state.testLocked = false;
-  state.current = randomItem(SCENARIOS);
-
-  $("testNumber").textContent = state.testNumber;
-  $("testTotal").textContent = state.testTotal;
-  $("testScore").textContent = state.testScore;
-  $("testFeedback").textContent = "";
-  $("testFeedback").className = "feedback";
-
-  renderLayout($("testArt"), state.current, false);
-  renderChoices($("testChoices"), makeAnswerOptions(state.current), true);
-}
-
-function answerTest(answer, button){
-  if(state.testLocked) return;
-  state.testLocked = true;
-
-  const buttons = Array.from($("testChoices").querySelectorAll(".choice"));
-  buttons.forEach(function(item){ item.disabled = true; });
-
-  if(answer === state.current.fix){
-    state.testScore += 1;
-    button.classList.add("correct");
-    $("testFeedback").textContent = "✓ Correct!";
-    $("testFeedback").className = "feedback good";
-  }else{
-    button.classList.add("wrong");
-    buttons.forEach(function(item){
-      if(item.dataset.answer === "correct") item.classList.add("correct");
-    });
-    $("testFeedback").textContent = "✗ Not quite.";
-    $("testFeedback").className = "feedback bad";
-  }
-
-  $("testScore").textContent = state.testScore;
-
-  window.setTimeout(function(){
-    nextTestQuestion();
-  }, 850);
-}
-
-function finishTest(){
-  $("testPanel").classList.add("hidden");
-  const percent = Math.round((state.testScore / state.testTotal) * 100);
-
-  $("results").innerHTML =
-    "<h2>Alignment Test Complete!</h2>" +
-    '<div class="score-big">' + state.testScore + " / " + state.testTotal + "</div>" +
-    "<p style='font-size:22px'><strong>" + percent + "%</strong></p>" +
-    "<p class='mini'>Review the alignment principles in Learn Mode and try another test when you're ready.</p>" +
-    "<div class='actions'>" +
-    "<button id='anotherTest' class='action primary' type='button'>Choose Another Test</button>" +
-    "<button id='returnLearn' class='action' type='button'>Return to Learn Mode</button>" +
-    "</div>";
-
-  $("results").classList.remove("hidden");
-  $("anotherTest").addEventListener("click", function(){
-    $("results").classList.add("hidden");
-    $("testSetup").classList.remove("hidden");
-  });
-  $("returnLearn").addEventListener("click", function(){
-    setMode("learn");
-  });
-}
-
-function baseLayout(target){
-  target.innerHTML =
-    '<div class="kicker">Digital Design</div>' +
-    '<div class="head">Design<br>Matters.</div>' +
-    '<div class="copy">Good design helps people understand information quickly. Alignment creates order, connects related elements, and makes a page feel intentional.</div>' +
-    '<div class="rule"></div>' +
-    '<div class="g circle dark g1"></div>' +
-    '<div class="g round light g2"></div>' +
-    '<div class="g circle mid g3"></div>' +
-    '<div class="g soft dark g4"></div>' +
-    '<div class="g circle light g5"></div>';
-
-  const head = target.querySelector(".head");
-  const copy = target.querySelector(".copy");
-  const rule = target.querySelector(".rule");
-  const shapes = Array.from(target.querySelectorAll(".g"));
-
-  head.style.left = "72px";
-  head.style.top = "70px";
-  copy.style.left = "72px";
-  copy.style.top = "225px";
-  rule.style.left = "72px";
-  rule.style.top = "200px";
-  rule.style.width = "210px";
-
-  const sizes = [[66,66],[82,82],[55,55],[72,72],[58,58]];
-  shapes.forEach(function(shape,index){
-    shape.style.width = sizes[index][0] + "px";
-    shape.style.height = sizes[index][1] + "px";
-    shape.style.left = (72 + index * 108) + "px";
-    shape.style.top = "390px";
-  });
-
-  return {head:head,copy:copy,rule:rule,shapes:shapes};
-}
-
-function renderLayout(target, scenario, corrected){
-  const parts = baseLayout(target);
-  if(corrected){
-    applyCorrection(parts, scenario.type);
-  }else{
-    applyFlaw(parts, scenario.type);
-  }
-}
-
-function applyFlaw(p,type){
-  switch(type){
-    case "left":
-      p.copy.style.left = "125px";
-      p.shapes.forEach(function(s,i){s.style.left=(125+i*108)+"px";});
-      break;
-    case "copy":
-      p.copy.style.left = "135px";
-      break;
-    case "center":
-      p.head.style.left = "350px";
-      p.copy.style.left = "72px";
-      p.shapes.forEach(function(s,i){s.style.left=(120+i*108)+"px";});
-      break;
-    case "spacing":
-      p.shapes[0].style.left="60px";p.shapes[1].style.left="205px";p.shapes[2].style.left="270px";p.shapes[3].style.left="430px";p.shapes[4].style.left="610px";
-      break;
-    case "baseline":
-      [370,350,390,355,375].forEach(function(y,i){p.shapes[i].style.top=y+"px";});
-      break;
-    case "margin":
-      p.head.style.left="25px";p.copy.style.left="25px";p.rule.style.left="25px";p.shapes.forEach(function(s,i){s.style.left=(25+i*108)+"px";});
-      break;
-    case "group":
-      p.shapes[4].style.left="760px";p.shapes[4].style.top="300px";
-      break;
-    case "rhythm":
-      p.copy.style.top="175px";p.shapes.forEach(function(s,i){s.style.top=(i===0?350:415)+"px";});
-      break;
-    case "container":
-      p.shapes.forEach(function(s,i){s.style.left=(145+i*108)+"px";});
-      break;
-    case "edge":
-      p.shapes[4].style.left="650px";
-      break;
-    case "proximity":
-      p.shapes[0].style.top="215px";
-      break;
-    case "asym":
-      p.shapes[0].style.left="95px";p.shapes[1].style.left="205px";p.shapes[2].style.left="315px";p.shapes[3].style.left="425px";p.shapes[4].style.left="720px";
-      break;
-  }
-}
-
-function applyCorrection(p,type){
-  switch(type){
-    case "center":
-      p.head.style.left="320px";p.copy.style.left="340px";p.shapes.forEach(function(s,i){s.style.left=(300+i*82)+"px";});
-      break;
-    case "margin":
-      p.head.style.left="72px";p.copy.style.left="72px";p.rule.style.left="72px";p.shapes.forEach(function(s,i){s.style.left=(72+i*108)+"px";});
-      break;
-    default:
-      break;
-  }
-}
-
-function showCorrectedLayout(target,scenario){
-  window.setTimeout(function(){renderLayout(target,scenario,true);},220);
-}
-
-$("learnMode").addEventListener("click",function(){setMode("learn");});
-$("testMode").addEventListener("click",function(){
-  state.mode="test";
-  $("learnMode").classList.remove("active");
-  $("testMode").classList.add("active");
-  $("learnPanel").classList.add("hidden");
-  $("testPanel").classList.add("hidden");
-  $("results").classList.add("hidden");
-  $("testSetup").classList.remove("hidden");
-});
-
-Array.from(document.querySelectorAll("[data-length]")).forEach(function(button){
-  button.addEventListener("click",function(){startTest(Number(button.dataset.length));});
-});
-
-$("learnCheck").addEventListener("click",checkLearn);
-$("learnNext").addEventListener("click",startLearnRound);
-
-setMode("learn");
-</script>
-</body>
-</html>
+function startTest(n){S.total=n;S.q=0;S.tscore=0;S.tlock=false;$("setup").classList.add("hidden");$("learn").classList.add("hidden");$("test").classList.remove("hidden");testQ()}function testQ(){if(S.q>=S.total)return finish();S.q++;S.tlock=false;S.cur=pick(DATA);$("q").textContent=S.q;$("total").textContent=S.total;$("tscore").textContent=S.tscore;$("tfeedback").textContent="";$("tbrief").innerHTML="<b>"+S.cur.t+"</b><br>"+S.cur.c+"<br><br>Choose the best overall solution.";visual($("tcanvas"),S.cur,false);$("tchoices").innerHTML="";opts(S.cur.f).forEach(x=>{let b=add($("tchoices"),"choice",x);b.onclick=()=>answer(x,b)})}function answer(x,b){if(S.tlock)return;S.tlock=true;[...$("tchoices").children].forEach(z=>z.disabled=true);let ok=S.cur.f.includes(x);if(ok){S.tscore++;b.classList.add("correct");$("tfeedback").textContent="✓ Correct!";$("tfeedback").className="feedback good"}else{b.classList.add("wrong");$("tfeedback").textContent="✗ Not the best overall solution.";$("tfeedback").className="feedback bad"}$("tscore").textContent=S.tscore;$("guideContent").innerHTML=ok?`<div class="guide-card celebrate"><h3>Nice diagnosis! 🎉</h3><p>You identified a change that directly addresses the layout's underlying structure.</p></div><div class="guide-card"><h3>Why it matters</h3><p>${S.cur.f.join("<br><br>")}</p></div>`:`<div class="guide-card partial"><h3>Keep investigating.</h3><p>Your choice did not address the main relationship causing the problem. Compare the edges, grouping, and spacing of related elements before choosing a fix.</p></div><div class="guide-card"><h3>Key solutions</h3><p>• ${S.cur.f.join("<br>• ")}</p></div>`;openGuide();setTimeout(testQ,1400)}function finish(){let p=Math.round(S.tscore/S.total*100);$("test").classList.add("hidden");$("results").innerHTML="<h2>Assessment Complete</h2><div class='score'>"+S.tscore+" / "+S.total+"</div><p><b>"+p+"%</b></p><button class='btn primary' id='again'>Choose Another Test</button> <button class='btn' id='learnAgain'>Learn Mode</button>";$("results").classList.remove("hidden");$("again").onclick=()=>{$("results").classList.add("hidden");$("setup").classList.remove("hidden")};$("learnAgain").onclick=()=>mode("learn")}
+$("learnMode").onclick=()=>mode("learn");$("testMode").onclick=()=>{$("learnMode").classList.remove("active");$("testMode").classList.add("active");$("learn").classList.add("hidden");$("test").classList.add("hidden");$("setup").classList.remove("hidden");$("results").classList.add("hidden")};document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>startTest(+b.dataset.n));$("check").onclick=check;$("next").onclick=learn;$("guideTab").onclick=openGuide;$("guideClose").onclick=closeGuide;mode("learn");
+</script></body></html>
