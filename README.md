@@ -1,17 +1,11 @@
-# Alignment Detective
+# Alignment & Spacing Detective
 
-MACC Digital Design interactive game for practicing alignment and layout principles.
+A self-contained MACC Digital Design game for alignment, margins, grouping, proximity, spacing, leading, kerning/tracking, and text-box alignment.
 
-## Features
-- Learn Mode with immediate explanation and corrected layout
-- Test Mode with 10, 20, 30, 40, or 50 questions
-- 12 alignment scenarios
-- CSS/HTML-generated design compositions; no external image files required
-- Responsive layout for student computers
+## Modes
+- Learn Mode: multi-solution challenges with corrected layouts and a slide-out Design Guide.
+- Test Mode: 10, 20, 30, 40, or 50 questions.
+- Guidance: students receive encouraging feedback explaining what they got right, what they missed, why the missed changes matter, and—when nothing was correct—a short reteaching of fundamentals.
 
-## GitHub Pages
-Publish `index.html` from the repository root.
-
-Student URL:
-`https://YOUR-ORG.github.io/Alignment-Detective/`
+No external libraries or image files are required. Publish `index.html` with GitHub Pages.
 
